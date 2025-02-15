@@ -123,7 +123,7 @@ void lcd_send_data(char data)
 
 void lcd_clear (void)
 {
-	lcd_send_cmd (0x80);
+	lcd_send_cmd (0x80);		// set cursor to the first position in the first line
 	for (int i=0; i<70; i++)
 	{
 		lcd_send_data (' ');
@@ -135,10 +135,10 @@ void lcd_put_cur(int row, int col)
     switch (row)
     {
         case 0:
-            col |= 0x80;
+            col |= 0x80;		// set cursor to the first position in the first line and move it for col spaces
             break;
         case 1:
-            col |= 0xC0;
+            col |= 0xC0;		// set cursor to the first position in the second line and move it for col spaces
             break;
     }
 
