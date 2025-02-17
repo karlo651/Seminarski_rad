@@ -188,11 +188,12 @@ void Display_Temp(float Temp){
 /*************************** DS18B20 ***************************/
 
 void Set_Pin_Output(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin){
-	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	GPIO_InitTypeDef GPIO_InitStruct = {0}; 	// Declare and initialize a structure of type GPIO_InitTypeDef to configure the pin properties.
 	GPIO_InitStruct.Pin = GPIO_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOx, &GPIO_InitStruct);
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;     // Set the speed of the pin to low frequency. This controls the slew rate (how fast the pin changes state).
+   													// Lower speed reduces power consumption and electromagnetic interference.
+	HAL_GPIO_Init(GPIOx, &GPIO_InitStruct);		// Call the HAL (Hardware Abstraction Layer) function to apply the configuration to the selected GPIO port and pin.
 }
 
 void Set_Pin_Input(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin){
@@ -310,7 +311,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   HAL_TIM_Base_Start(&htim6);
-  HAL_TIM_PWM_Start(&htim3,  TIM_CHANNEL_1);
+
 
   lcd_init();
   lcd_send_string("INITIALISING");
@@ -327,7 +328,7 @@ int main(void)
 
   PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
   PID_SetSampleTime(&TPID, 500);
-  PID_SetOutputLimits(&TPID, 1, 1000);
+  PID_SetOutputLimits(&TPID, 1, 100);
 
   /* USER CODE END 2 */
 
@@ -349,11 +350,12 @@ int main(void)
 		  switch(set){
 
 		  case 0:
+			  HAL_TIM_PWM_Stop(&htim3,  TIM_CHANNEL_1);
 			  TempSetpoint = 1;
 			  PID(&TPID, &Temp, &PIDOut, &TempSetpoint, P, I, D, _PID_P_ON_E, _PID_CD_DIRECT);
 			  PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
 			  PID_SetSampleTime(&TPID, 200);
-			  PID_SetOutputLimits(&TPID, 1, 1000);
+			  PID_SetOutputLimits(&TPID, 1, 100);
 
 			  sprintf(str, "Temp not set    ");
 			  lcd_send_string(str);
@@ -362,11 +364,12 @@ int main(void)
 			  lcd_send_string(str);
 			  break;
 		  case 1:
+			  HAL_TIM_PWM_Start(&htim3,  TIM_CHANNEL_1);
 			  TempSetpoint = 40;
 			  PID(&TPID, &Temp, &PIDOut, &TempSetpoint, P, I, D, _PID_P_ON_E, _PID_CD_DIRECT);
 			  PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
 			  PID_SetSampleTime(&TPID, 200);
-			  PID_SetOutputLimits(&TPID, 1, 1000);
+			  PID_SetOutputLimits(&TPID, 1, 100);
 
 			  sprintf(str, "Set temp PLA    ");
 			  lcd_send_string(str);
@@ -375,11 +378,12 @@ int main(void)
 			  lcd_send_string(str);
 			  break;
 		  case 2:
+			  HAL_TIM_PWM_Start(&htim3,  TIM_CHANNEL_1);
 			  TempSetpoint = 48;
 			  PID(&TPID, &Temp, &PIDOut, &TempSetpoint, P, I, D, _PID_P_ON_E, _PID_CD_DIRECT);
 			  PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
 			  PID_SetSampleTime(&TPID, 200);
-			  PID_SetOutputLimits(&TPID, 1, 1000);
+			  PID_SetOutputLimits(&TPID, 1, 100);
 
 			  sprintf(str, "Set temp PETG   ");
 			  lcd_send_string(str);
@@ -388,11 +392,12 @@ int main(void)
 			  lcd_send_string(str);
 			  break;
 		  case 3:
+			  HAL_TIM_PWM_Start(&htim3,  TIM_CHANNEL_1);
 			  TempSetpoint = 55;
 			  PID(&TPID, &Temp, &PIDOut, &TempSetpoint, P, I, D, _PID_P_ON_E, _PID_CD_DIRECT);
 			  PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
 			  PID_SetSampleTime(&TPID, 200);
-			  PID_SetOutputLimits(&TPID, 1, 1000);
+			  PID_SetOutputLimits(&TPID, 1, 100);
 
 			  sprintf(str, "Set temp ASA    ");
 			  lcd_send_string(str);
@@ -401,16 +406,17 @@ int main(void)
 			  lcd_send_string(str);
 			  break;
 		  case 4:
+			  HAL_TIM_PWM_Start(&htim3,  TIM_CHANNEL_1);
 			  TempSetpoint = 50;
 			  PID(&TPID, &Temp, &PIDOut, &TempSetpoint, P, I, D, _PID_P_ON_E, _PID_CD_DIRECT);
 			  PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
 			  PID_SetSampleTime(&TPID, 200);
-			  PID_SetOutputLimits(&TPID, 1, 1000);
+			  PID_SetOutputLimits(&TPID, 1, 100);
 
-			  sprintf(str, "Set temp TPU    ");
+			  sprintf(str, "Set temp ABS    ");
 			  lcd_send_string(str);
 			  lcd_put_cur(1,0);
-			  sprintf(str, "Heating to 50C  ");
+			  sprintf(str, "Heating to 58C  ");
 			  lcd_send_string(str);
 			  break;
 
